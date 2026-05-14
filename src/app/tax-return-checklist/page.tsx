@@ -2,12 +2,17 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AdSlot from "@/components/ads/AdSlot";
+import ArticleJsonLd from "@/components/content/ArticleJsonLd";
+import GuideSupport from "@/components/content/GuideSupport";
 import { pageMetadata } from "@/lib/seo";
 
+const title = "Australian Tax Return Checklist";
+const description =
+  "Simple Australian tax return checklist for casual workers, backpackers and first-time lodgers.";
+
 export const metadata = pageMetadata({
-  title: "Australian Tax Return Checklist",
-  description:
-    "Simple Australian tax return checklist for casual workers, backpackers and first-time lodgers.",
+  title,
+  description,
   path: "/tax-return-checklist/",
 });
 
@@ -17,6 +22,11 @@ export default function TaxReturnChecklistPage() {
       <Header />
       <main className="flex-1">
         <article className="mx-auto max-w-3xl px-4 py-12">
+          <ArticleJsonLd
+            title={title}
+            description={description}
+            path="/tax-return-checklist/"
+          />
           <Link href="/" className="mb-5 inline-block text-sm font-medium text-emerald-700">
             Back to calculator
           </Link>
@@ -38,6 +48,19 @@ export default function TaxReturnChecklistPage() {
             <li className="rounded-md bg-white p-4 shadow-sm">Medicare Entitlement Statement, if needed</li>
             <li className="rounded-md bg-white p-4 shadow-sm">Private hospital cover details, if you had cover</li>
           </ul>
+
+          <GuideSupport
+            sources={[
+              {
+                label: "ATO: Preparing your tax return",
+                href: "https://www.ato.gov.au/individuals-and-families/your-tax-return/before-you-prepare-your-tax-return/preparing-your-tax-return",
+              },
+              {
+                label: "ATO: Tax in Australia, what you need to know",
+                href: "https://www.ato.gov.au/individuals-and-families/coming-to-australia-or-going-overseas/coming-to-australia/tax-in-australia-what-you-need-to-know",
+              },
+            ]}
+          />
         </article>
       </main>
       <Footer />

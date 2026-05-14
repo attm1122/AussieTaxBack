@@ -136,8 +136,17 @@ export function SEOContent() {
           <Link href="/working-holiday-tax/" className="rounded-md bg-white p-4 text-sm font-medium text-slate-800 shadow-sm hover:text-emerald-700">
             Working holiday tax refund guide
           </Link>
+          <Link href="/working-holiday-maker-tax-rates/" className="rounded-md bg-white p-4 text-sm font-medium text-slate-800 shadow-sm hover:text-emerald-700">
+            Working holiday maker tax rates
+          </Link>
           <Link href="/backpacker-tax-refund-australia/" className="rounded-md bg-white p-4 text-sm font-medium text-slate-800 shadow-sm hover:text-emerald-700">
             Backpacker tax refund guide
+          </Link>
+          <Link href="/tax-file-number-backpacker/" className="rounded-md bg-white p-4 text-sm font-medium text-slate-800 shadow-sm hover:text-emerald-700">
+            Tax file number for backpackers
+          </Link>
+          <Link href="/tax-return-after-leaving-australia/" className="rounded-md bg-white p-4 text-sm font-medium text-slate-800 shadow-sm hover:text-emerald-700">
+            Tax return after leaving Australia
           </Link>
           <Link href="/casual-worker-tax-refund-calculator/" className="rounded-md bg-white p-4 text-sm font-medium text-slate-800 shadow-sm hover:text-emerald-700">
             Casual worker tax calculator
@@ -232,7 +241,7 @@ export function SEOContent() {
       </section>
 
       <section className="mb-10 rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-950">
-        <p className="font-semibold">Rates last checked: 14 May 2026</p>
+        <p className="font-semibold">Rates last checked: 15 May 2026</p>
         <p className="mt-1">
           Tax rates, working holiday maker rates, Medicare guidance, study loan
           rates and car kilometre rates were checked against public ATO pages.

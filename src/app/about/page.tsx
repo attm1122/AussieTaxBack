@@ -38,6 +38,13 @@ export default function AboutPage() {
               Tax rates and rules are reviewed against public ATO guidance. The
               current calculator supports the 2024-25 and 2025-26 financial years.
             </p>
+            <p>
+              You can see recent source checks and calculator changes on the{" "}
+              <Link href="/updates/" className="text-emerald-700 hover:underline">
+                updates page
+              </Link>
+              .
+            </p>
           </div>
         </div>
       </main>

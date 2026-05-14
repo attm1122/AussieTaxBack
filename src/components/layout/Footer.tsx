@@ -3,7 +3,10 @@ import AdSlot from "@/components/ads/AdSlot";
 
 const guideLinks = [
   { href: "/working-holiday-tax/", label: "Working holiday tax" },
+  { href: "/working-holiday-maker-tax-rates/", label: "WHM tax rates" },
   { href: "/backpacker-tax-refund-australia/", label: "Backpacker tax refund" },
+  { href: "/tax-file-number-backpacker/", label: "Backpacker TFN" },
+  { href: "/tax-return-after-leaving-australia/", label: "Tax after leaving" },
   { href: "/casual-worker-tax-refund-calculator/", label: "Casual worker tax" },
   { href: "/farm-work-tax-refund/", label: "Farm work tax" },
   { href: "/mygov-income-statement/", label: "myGov income statement" },
@@ -19,6 +22,7 @@ const siteLinks = [
   { href: "/contact/", label: "Contact" },
   { href: "/privacy/", label: "Privacy" },
   { href: "/disclaimer/", label: "Disclaimer" },
+  { href: "/updates/", label: "Updates" },
 ] as const;
 
 export default function Footer() {

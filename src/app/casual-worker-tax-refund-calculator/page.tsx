@@ -2,12 +2,17 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AdSlot from "@/components/ads/AdSlot";
+import ArticleJsonLd from "@/components/content/ArticleJsonLd";
+import GuideSupport from "@/components/content/GuideSupport";
 import { pageMetadata } from "@/lib/seo";
 
+const title = "Casual Worker Tax Refund Calculator Australia";
+const description =
+  "Simple tax refund estimate and myTax checklist for casual workers in Australia.";
+
 export const metadata = pageMetadata({
-  title: "Casual Worker Tax Refund Calculator Australia",
-  description:
-    "Simple tax refund estimate and myTax checklist for casual workers in Australia.",
+  title,
+  description,
   path: "/casual-worker-tax-refund-calculator/",
 });
 
@@ -17,6 +22,11 @@ export default function CasualWorkerTaxRefundCalculatorPage() {
       <Header />
       <main className="flex-1">
         <article className="mx-auto max-w-3xl px-4 py-12">
+          <ArticleJsonLd
+            title={title}
+            description={description}
+            path="/casual-worker-tax-refund-calculator/"
+          />
           <Link href="/#calculator" className="mb-5 inline-block text-sm font-medium text-emerald-700">
             Back to calculator
           </Link>
@@ -67,6 +77,25 @@ export default function CasualWorkerTaxRefundCalculatorPage() {
               Estimate your casual worker tax
             </Link>
           </div>
+
+          <GuideSupport
+            sources={[
+              {
+                label: "ATO: Preparing your tax return",
+                href: "https://www.ato.gov.au/individuals-and-families/your-tax-return/before-you-prepare-your-tax-return/preparing-your-tax-return",
+              },
+              {
+                label: "ATO: Do you need to lodge a tax return?",
+                href: "https://www.ato.gov.au/forms-and-instructions/individual-tax-return-2025-instructions/completing-the-individual-tax-return-2025/do-you-need-to-lodge-a-tax-return-2025",
+              },
+            ]}
+            related={[
+              { label: "What can I claim on tax?", href: "/what-can-i-claim-on-tax-australia/" },
+              { label: "Work expenses guide", href: "/work-expenses-australia/" },
+              { label: "Tax return checklist", href: "/tax-return-checklist/" },
+              { label: "Use the calculator", href: "/#calculator" },
+            ]}
+          />
         </article>
       </main>
       <Footer />

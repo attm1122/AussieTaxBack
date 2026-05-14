@@ -110,6 +110,24 @@ export const guidePages = [
     description:
       "Simple Australian tax return checklist for casual workers, backpackers and first-time lodgers.",
   },
+  {
+    path: "/working-holiday-maker-tax-rates/",
+    title: "Working Holiday Maker Tax Rates Australia",
+    description:
+      "Simple guide to Australian working holiday maker tax rates, TFN checks and refund estimates.",
+  },
+  {
+    path: "/tax-file-number-backpacker/",
+    title: "Tax File Number Guide for Backpackers",
+    description:
+      "Simple TFN guide for backpackers and working holiday makers starting work in Australia.",
+  },
+  {
+    path: "/tax-return-after-leaving-australia/",
+    title: "Tax Return After Leaving Australia",
+    description:
+      "Simple guide for backpackers and temporary visa holders lodging an Australian tax return after leaving Australia.",
+  },
 ] as const;
 
 export const supportPages = [
@@ -136,5 +154,11 @@ export const supportPages = [
     title: "Disclaimer",
     description:
       "Disclaimer for Aussie Tax Back and its Australian tax refund estimate calculator.",
+  },
+  {
+    path: "/updates/",
+    title: "Tax Calculator Updates",
+    description:
+      "Update history for Aussie Tax Back tax rates, calculator rules and source checks.",
   },
 ] as const;

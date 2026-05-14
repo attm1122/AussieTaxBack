@@ -18,6 +18,9 @@ export default function Header() {
           <Link href="/working-holiday-tax/" className="hover:text-emerald-700">
             Working holiday
           </Link>
+          <Link href="/working-holiday-maker-tax-rates/" className="hover:text-emerald-700">
+            WHM rates
+          </Link>
           <Link href="/what-can-i-claim-on-tax-australia/" className="hover:text-emerald-700">
             Claims
           </Link>

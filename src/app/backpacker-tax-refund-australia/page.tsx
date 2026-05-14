@@ -2,12 +2,17 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AdSlot from "@/components/ads/AdSlot";
+import ArticleJsonLd from "@/components/content/ArticleJsonLd";
+import GuideSupport from "@/components/content/GuideSupport";
 import { pageMetadata } from "@/lib/seo";
 
+const title = "Backpacker Tax Refund Australia";
+const description =
+  "Simple backpacker tax refund guide for people who worked in Australia on a working holiday visa.";
+
 export const metadata = pageMetadata({
-  title: "Backpacker Tax Refund Australia",
-  description:
-    "Simple backpacker tax refund guide for people who worked in Australia on a working holiday visa.",
+  title,
+  description,
   path: "/backpacker-tax-refund-australia/",
 });
 
@@ -17,6 +22,11 @@ export default function BackpackerTaxRefundAustraliaPage() {
       <Header />
       <main className="flex-1">
         <article className="mx-auto max-w-3xl px-4 py-12">
+          <ArticleJsonLd
+            title={title}
+            description={description}
+            path="/backpacker-tax-refund-australia/"
+          />
           <Link href="/#calculator" className="mb-5 inline-block text-sm font-medium text-emerald-700">
             Back to calculator
           </Link>
@@ -79,6 +89,25 @@ export default function BackpackerTaxRefundAustraliaPage() {
               </Link>
             </section>
           </div>
+
+          <GuideSupport
+            sources={[
+              {
+                label: "ATO: Working holiday makers",
+                href: "https://www.ato.gov.au/individuals/ind/resident-for-tax-if-whm-/",
+              },
+              {
+                label: "ATO: Preparing your tax return",
+                href: "https://www.ato.gov.au/individuals-and-families/your-tax-return/before-you-prepare-your-tax-return/preparing-your-tax-return",
+              },
+            ]}
+            related={[
+              { label: "Working holiday maker tax rates", href: "/working-holiday-maker-tax-rates/" },
+              { label: "Tax return after leaving Australia", href: "/tax-return-after-leaving-australia/" },
+              { label: "Tax file number for backpackers", href: "/tax-file-number-backpacker/" },
+              { label: "Use the calculator", href: "/#calculator" },
+            ]}
+          />
         </article>
       </main>
       <Footer />
