@@ -1,4 +1,10 @@
 {
+  "rewrites": [
+    {
+      "source": "/google9df60930402332d4.html",
+      "destination": "/google9df60930402332d4/"
+    }
+  ],
   "redirects": [
     {
       "source": "/(.*)",
