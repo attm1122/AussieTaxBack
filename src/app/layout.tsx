@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import ThirdPartyScripts from "@/components/ThirdPartyScripts";
+import ThirdPartyScripts, { ADSENSE_CLIENT } from "@/components/ThirdPartyScripts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -67,6 +67,11 @@ export default function RootLayout({
   return (
     <html lang="en-AU">
       <head>
+        <script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+          crossOrigin="anonymous"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }}

@@ -1,8 +1,10 @@
 import Script from "next/script";
 
+export const ADSENSE_CLIENT =
+  process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-1045059001611132";
+
 export default function ThirdPartyScripts() {
   const gaId = process.env.NEXT_PUBLIC_GA_ID;
-  const adsenseClient = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
 
   return (
     <>
@@ -21,14 +23,6 @@ export default function ThirdPartyScripts() {
             `}
           </Script>
         </>
-      )}
-      {adsenseClient && (
-        <Script
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
-          crossOrigin="anonymous"
-          strategy="afterInteractive"
-        />
       )}
     </>
   );
