@@ -2,12 +2,14 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AdSlot from "@/components/ads/AdSlot";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Temporary Visa Medicare Tax Guide | Aussie Tax Back",
+export const metadata = pageMetadata({
+  title: "Temporary Visa Medicare Tax Guide",
   description:
     "Plain-English guide to Medicare questions for temporary visa holders lodging an Australian tax return.",
-};
+  path: "/temporary-visa-medicare-tax/",
+});
 
 export default function TemporaryVisaMedicareTaxPage() {
   return (

@@ -2,12 +2,14 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AdSlot from "@/components/ads/AdSlot";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Australian Tax Return Checklist | Aussie Tax Back",
+export const metadata = pageMetadata({
+  title: "Australian Tax Return Checklist",
   description:
     "Simple Australian tax return checklist for casual workers, backpackers and first-time lodgers.",
-};
+  path: "/tax-return-checklist/",
+});
 
 export default function TaxReturnChecklistPage() {
   return (

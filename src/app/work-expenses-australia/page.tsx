@@ -2,12 +2,14 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AdSlot from "@/components/ads/AdSlot";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "What Work Expenses Can I Claim? | Aussie Tax Back",
+export const metadata = pageMetadata({
+  title: "What Work Expenses Can I Claim?",
   description:
     "Plain-English guide to common Australian work expenses for tax time.",
-};
+  path: "/work-expenses-australia/",
+});
 
 export default function WorkExpensesAustraliaPage() {
   return (

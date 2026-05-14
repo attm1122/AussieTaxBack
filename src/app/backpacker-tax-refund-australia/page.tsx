@@ -2,12 +2,14 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AdSlot from "@/components/ads/AdSlot";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Backpacker Tax Refund Australia | Aussie Tax Back",
+export const metadata = pageMetadata({
+  title: "Backpacker Tax Refund Australia",
   description:
     "Simple backpacker tax refund guide for people who worked in Australia on a working holiday visa.",
-};
+  path: "/backpacker-tax-refund-australia/",
+});
 
 export default function BackpackerTaxRefundAustraliaPage() {
   return (

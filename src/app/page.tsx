@@ -5,6 +5,14 @@ import ExampleCalculations from "@/components/calculator/ExampleCalculations";
 import AdSlot from "@/components/ads/AdSlot";
 import { SEOContent } from "./SEOContent";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/seo";
+
+export const metadata = pageMetadata({
+  title: "Australian Tax Refund Calculator",
+  description:
+    "Estimate your Australian tax refund or tax payable in plain English. Built for working holiday makers, casual workers and first-time lodgers.",
+  path: "/",
+});
 
 export default function HomePage() {
   return (

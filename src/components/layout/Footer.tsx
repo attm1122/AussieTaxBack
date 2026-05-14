@@ -1,33 +1,65 @@
 import Link from "next/link";
 import AdSlot from "@/components/ads/AdSlot";
 
+const guideLinks = [
+  { href: "/working-holiday-tax/", label: "Working holiday tax" },
+  { href: "/backpacker-tax-refund-australia/", label: "Backpacker tax refund" },
+  { href: "/casual-worker-tax-refund-calculator/", label: "Casual worker tax" },
+  { href: "/farm-work-tax-refund/", label: "Farm work tax" },
+  { href: "/mygov-income-statement/", label: "myGov income statement" },
+  { href: "/medicare-entitlement-statement/", label: "Medicare statement" },
+  { href: "/temporary-visa-medicare-tax/", label: "Temporary visa Medicare" },
+  { href: "/work-expenses-australia/", label: "Work expenses" },
+  { href: "/what-can-i-claim-on-tax-australia/", label: "What can I claim?" },
+  { href: "/tax-return-checklist/", label: "Tax return checklist" },
+] as const;
+
+const siteLinks = [
+  { href: "/about/", label: "About" },
+  { href: "/contact/", label: "Contact" },
+  { href: "/privacy/", label: "Privacy" },
+  { href: "/disclaimer/", label: "Disclaimer" },
+] as const;
+
 export default function Footer() {
   return (
     <footer className="border-t border-slate-200 bg-white">
       <div className="mx-auto max-w-6xl px-4 py-8">
         <AdSlot placement="footer" className="mb-6" />
-        <div className="mb-5 flex flex-wrap gap-4 text-sm">
-          <Link href="/about/" className="text-slate-700 hover:text-emerald-700">
-            About
-          </Link>
-          <Link href="/contact/" className="text-slate-700 hover:text-emerald-700">
-            Contact
-          </Link>
-          <Link href="/tax-return-checklist/" className="text-slate-700 hover:text-emerald-700">
-            Checklist
-          </Link>
-          <Link href="/what-can-i-claim-on-tax-australia/" className="text-slate-700 hover:text-emerald-700">
-            Claims
-          </Link>
-          <Link href="/backpacker-tax-refund-australia/" className="text-slate-700 hover:text-emerald-700">
-            Backpackers
-          </Link>
-          <Link href="/privacy/" className="text-slate-700 hover:text-emerald-700">
-            Privacy
-          </Link>
-          <Link href="/disclaimer/" className="text-slate-700 hover:text-emerald-700">
-            Disclaimer
-          </Link>
+        <div className="mb-6 grid gap-6 text-sm sm:grid-cols-[2fr_1fr]">
+          <nav aria-label="Tax guides">
+            <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Tax guides
+            </h2>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {guideLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-slate-700 hover:text-emerald-700"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </nav>
+
+          <nav aria-label="Site links">
+            <h2 className="mb-3 text-xs font-semibold uppercase tracking-wide text-slate-500">
+              Site
+            </h2>
+            <div className="grid gap-2">
+              {siteLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-slate-700 hover:text-emerald-700"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </nav>
         </div>
         <p className="text-xs text-slate-500 mb-3">
           This website is independent and is not affiliated with the Australian Taxation Office.

@@ -2,12 +2,14 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AdSlot from "@/components/ads/AdSlot";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Medicare Entitlement Statement Guide | Aussie Tax Back",
+export const metadata = pageMetadata({
+  title: "Medicare Entitlement Statement Guide",
   description:
     "Simple guide to Medicare Entitlement Statements for temporary visa holders doing an Australian tax return.",
-};
+  path: "/medicare-entitlement-statement/",
+});
 
 export default function MedicareEntitlementStatementPage() {
   return (

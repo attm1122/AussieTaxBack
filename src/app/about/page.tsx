@@ -1,12 +1,14 @@
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "About | Aussie Tax Back",
+export const metadata = pageMetadata({
+  title: "About Aussie Tax Back",
   description:
     "About Aussie Tax Back, a plain-English Australian tax estimate tool.",
-};
+  path: "/about/",
+});
 
 export default function AboutPage() {
   return (

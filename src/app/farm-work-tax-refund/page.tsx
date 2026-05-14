@@ -2,12 +2,14 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AdSlot from "@/components/ads/AdSlot";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Farm Work Tax Refund Australia | Aussie Tax Back",
+export const metadata = pageMetadata({
+  title: "Farm Work Tax Refund Australia",
   description:
     "Simple guide for farm workers and working holiday makers checking Australian tax refund estimates.",
-};
+  path: "/farm-work-tax-refund/",
+});
 
 export default function FarmWorkTaxRefundPage() {
   return (

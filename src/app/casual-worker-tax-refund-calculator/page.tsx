@@ -2,12 +2,14 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AdSlot from "@/components/ads/AdSlot";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Casual Worker Tax Refund Calculator Australia | Aussie Tax Back",
+export const metadata = pageMetadata({
+  title: "Casual Worker Tax Refund Calculator Australia",
   description:
     "Simple tax refund estimate and myTax checklist for casual workers in Australia.",
-};
+  path: "/casual-worker-tax-refund-calculator/",
+});
 
 export default function CasualWorkerTaxRefundCalculatorPage() {
   return (

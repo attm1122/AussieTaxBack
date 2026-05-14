@@ -2,12 +2,14 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AdSlot from "@/components/ads/AdSlot";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "How To Read Your myGov Income Statement | Aussie Tax Back",
+export const metadata = pageMetadata({
+  title: "How To Read Your myGov Income Statement",
   description:
     "Simple guide to the income and tax taken out numbers used in an Australian tax return estimate.",
-};
+  path: "/mygov-income-statement/",
+});
 
 export default function MyGovIncomeStatementPage() {
   return (

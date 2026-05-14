@@ -1,23 +1,22 @@
 import type { Metadata } from "next";
 import ThirdPartyScripts, { ADSENSE_CLIENT } from "@/components/ThirdPartyScripts";
+import { siteName, siteUrl } from "@/lib/seo";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://aussietaxback.com"),
-  title: "Aussie Tax Back | Australian Tax Refund Calculator",
+  metadataBase: new URL(siteUrl),
+  applicationName: siteName,
+  title: {
+    default: "Australian Tax Refund Calculator | Aussie Tax Back",
+    template: `%s | ${siteName}`,
+  },
   description:
     "Estimate your Australian tax refund or tax payable in plain English. Simple tax calculator for working holiday makers, casual workers, FIFO workers and people with more than one job.",
-  keywords: [
-    "tax refund calculator",
-    "Australian tax",
-    "tax return estimate",
-    "tax calculator Australia",
-    "ATO refund",
-    "work expenses",
-  ],
   openGraph: {
-    title: "Aussie Tax Back",
+    title: "Australian Tax Refund Calculator",
     description: "Estimate your Australian tax refund in plain English",
+    url: siteUrl,
+    siteName,
     type: "website",
     locale: "en_AU",
   },
@@ -36,6 +35,10 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
   },
 };
 
@@ -44,25 +47,36 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const schemaOrg = {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    name: "Aussie Tax Back",
-    description:
-      "Estimate your Australian tax refund or tax payable in plain English.",
-    applicationCategory: "FinanceApplication",
-    operatingSystem: "Any",
-    offers: {
-      "@type": "Offer",
-      price: "0",
-      priceCurrency: "AUD",
+  const schemaOrg = [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: siteName,
+      url: siteUrl,
+      inLanguage: "en-AU",
     },
-    areaServed: {
-      "@type": "Country",
-      name: "Australia",
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      name: siteName,
+      url: siteUrl,
+      description:
+        "Estimate your Australian tax refund or tax payable in plain English.",
+      applicationCategory: "FinanceApplication",
+      operatingSystem: "Any",
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "AUD",
+      },
+      areaServed: {
+        "@type": "Country",
+        name: "Australia",
+      },
+      inLanguage: "en-AU",
+      isAccessibleForFree: true,
     },
-    inLanguage: "en-AU",
-  };
+  ];
 
   return (
     <html lang="en-AU">

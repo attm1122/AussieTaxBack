@@ -2,12 +2,14 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AdSlot from "@/components/ads/AdSlot";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "What Can I Claim on Tax in Australia? | Aussie Tax Back",
+export const metadata = pageMetadata({
+  title: "What Can I Claim on Tax in Australia?",
   description:
     "Simple list of common Australian tax deductions and work expenses to check before lodging.",
-};
+  path: "/what-can-i-claim-on-tax-australia/",
+});
 
 export default function WhatCanIClaimOnTaxAustraliaPage() {
   return (

@@ -1,11 +1,14 @@
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Disclaimer | Australian Tax Refund Calculator",
-  description: "Disclaimer for the Australian Tax Refund Calculator.",
-};
+export const metadata = pageMetadata({
+  title: "Disclaimer",
+  description:
+    "Disclaimer for Aussie Tax Back and its Australian tax refund estimate calculator.",
+  path: "/disclaimer/",
+});
 
 export default function DisclaimerPage() {
   return (

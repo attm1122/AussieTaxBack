@@ -1,11 +1,14 @@
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Privacy | Aussie Tax Back",
-  description: "Privacy policy for Aussie Tax Back.",
-};
+export const metadata = pageMetadata({
+  title: "Privacy Policy",
+  description:
+    "Privacy policy for Aussie Tax Back, including calculator entries, cookies, analytics and ads.",
+  path: "/privacy/",
+});
 
 export default function PrivacyPage() {
   return (

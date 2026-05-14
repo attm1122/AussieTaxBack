@@ -2,12 +2,14 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import AdSlot from "@/components/ads/AdSlot";
+import { pageMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Working Holiday Tax Refund Guide Australia | Aussie Tax Back",
+export const metadata = pageMetadata({
+  title: "Working Holiday Tax Refund Guide Australia",
   description:
     "Plain-English guide for working holiday makers estimating an Australian tax refund or tax bill.",
-};
+  path: "/working-holiday-tax/",
+});
 
 export default function WorkingHolidayTaxPage() {
   return (
