@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 const faqs = [
   {
@@ -36,7 +37,7 @@ const faqs = [
   {
     question: "Why is this only an estimate?",
     answer:
-      "Your final tax depends on many factors including your full income, records, private health cover, student loan, offsets and your ATO assessment.",
+      "Your real tax can change if the ATO has extra income, Medicare, study loan, or other details for you.",
   },
 ];
 
@@ -74,11 +75,11 @@ const helpfulLinks = [
     href: "https://www.ato.gov.au/rates/individual-income-tax-rates",
   },
   {
-    label: "Medicare levy",
+    label: "Medicare",
     href: "https://www.ato.gov.au/individuals/medicare-levy",
   },
   {
-    label: "Study and training loan repayments",
+    label: "Study loans",
     href: "https://www.ato.gov.au/individuals/study-and-training-support-loans",
   },
 ];
@@ -108,58 +109,99 @@ export function SEOContent() {
 
       {/* How it works */}
       <section className="mb-10">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        <h2 className="text-2xl font-semibold text-slate-950 mb-4">
           How this tax refund calculator works
         </h2>
-        <ol className="list-decimal list-inside space-y-2 text-gray-700">
+        <ol className="grid gap-3 text-slate-700 sm:grid-cols-3">
           <li>
-            Enter your income details - what you earned and how much tax was
-            already taken from your pay.
+            <span className="block text-sm font-semibold text-slate-950">1. Add income</span>
+            <span className="text-sm">Enter what you earned and tax already taken out.</span>
           </li>
           <li>
-            Add your work expenses - either a total you already know, or use our
-            guided categories to find them.
+            <span className="block text-sm font-semibold text-slate-950">2. Add work costs</span>
+            <span className="text-sm">Use a total or the guided expense questions.</span>
           </li>
-          <li>Get your instant estimate - see if you may get a refund or need to pay.</li>
+          <li>
+            <span className="block text-sm font-semibold text-slate-950">3. Check myTax</span>
+            <span className="text-sm">Use the guide to compare against myGov.</span>
+          </li>
         </ol>
+      </section>
+
+      <section className="mb-10 rounded-lg border border-slate-200 bg-slate-50 p-5">
+        <h2 className="text-xl font-semibold text-slate-950 mb-3">
+          Helpful guides
+        </h2>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <Link href="/working-holiday-tax/" className="rounded-md bg-white p-4 text-sm font-medium text-slate-800 shadow-sm hover:text-emerald-700">
+            Working holiday tax refund guide
+          </Link>
+          <Link href="/backpacker-tax-refund-australia/" className="rounded-md bg-white p-4 text-sm font-medium text-slate-800 shadow-sm hover:text-emerald-700">
+            Backpacker tax refund guide
+          </Link>
+          <Link href="/casual-worker-tax-refund-calculator/" className="rounded-md bg-white p-4 text-sm font-medium text-slate-800 shadow-sm hover:text-emerald-700">
+            Casual worker tax calculator
+          </Link>
+          <Link href="/farm-work-tax-refund/" className="rounded-md bg-white p-4 text-sm font-medium text-slate-800 shadow-sm hover:text-emerald-700">
+            Farm work tax refund guide
+          </Link>
+          <Link href="/mygov-income-statement/" className="rounded-md bg-white p-4 text-sm font-medium text-slate-800 shadow-sm hover:text-emerald-700">
+            How to read your myGov income statement
+          </Link>
+          <Link href="/medicare-entitlement-statement/" className="rounded-md bg-white p-4 text-sm font-medium text-slate-800 shadow-sm hover:text-emerald-700">
+            Medicare statement guide
+          </Link>
+          <Link href="/temporary-visa-medicare-tax/" className="rounded-md bg-white p-4 text-sm font-medium text-slate-800 shadow-sm hover:text-emerald-700">
+            Temporary visa Medicare guide
+          </Link>
+          <Link href="/work-expenses-australia/" className="rounded-md bg-white p-4 text-sm font-medium text-slate-800 shadow-sm hover:text-emerald-700">
+            Work expenses guide
+          </Link>
+          <Link href="/what-can-i-claim-on-tax-australia/" className="rounded-md bg-white p-4 text-sm font-medium text-slate-800 shadow-sm hover:text-emerald-700">
+            What can I claim on tax?
+          </Link>
+          <Link href="/tax-return-checklist/" className="rounded-md bg-white p-4 text-sm font-medium text-slate-800 shadow-sm hover:text-emerald-700">
+            Tax return checklist
+          </Link>
+        </div>
       </section>
 
       {/* What expenses */}
       <section className="mb-10">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        <h2 className="text-xl font-semibold text-slate-950 mb-4">
           What work expenses can you include?
         </h2>
-        <ul className="grid sm:grid-cols-2 gap-2 text-gray-700">
+        <ul className="grid sm:grid-cols-2 gap-2 text-slate-700">
           <li className="flex items-start gap-2">
-            <span className="text-green-600 mt-0.5">&#10003;</span>
+            <span className="text-emerald-600 mt-0.5">&#10003;</span>
             <span>Work clothes and safety gear</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-green-600 mt-0.5">&#10003;</span>
+            <span className="text-emerald-600 mt-0.5">&#10003;</span>
             <span>Tools and equipment</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-green-600 mt-0.5">&#10003;</span>
+            <span className="text-emerald-600 mt-0.5">&#10003;</span>
             <span>Phone and internet</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-green-600 mt-0.5">&#10003;</span>
+            <span className="text-emerald-600 mt-0.5">&#10003;</span>
             <span>Training and licences</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-green-600 mt-0.5">&#10003;</span>
+            <span className="text-emerald-600 mt-0.5">&#10003;</span>
             <span>Work travel</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-green-600 mt-0.5">&#10003;</span>
+            <span className="text-emerald-600 mt-0.5">&#10003;</span>
             <span>Subscriptions and memberships</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-green-600 mt-0.5">&#10003;</span>
+            <span className="text-emerald-600 mt-0.5">&#10003;</span>
             <span>Donations to charity</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-green-600 mt-0.5">&#10003;</span>
+            <span className="text-emerald-600 mt-0.5">&#10003;</span>
             <span>Tax agent fees</span>
           </li>
         </ul>
@@ -167,10 +209,10 @@ export function SEOContent() {
 
       {/* Helpful links */}
       <section className="mb-10">
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">
+        <h2 className="text-xl font-semibold text-slate-950 mb-2">
           Helpful official links
         </h2>
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="text-sm text-slate-600 mb-4">
           Want to check the official rules? These ATO pages may help.
         </p>
         <ul className="space-y-1.5">
@@ -180,7 +222,7 @@ export function SEOContent() {
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-green-700 hover:underline text-sm"
+                className="text-emerald-700 hover:underline text-sm"
               >
                 {link.label}
               </a>
@@ -189,32 +231,40 @@ export function SEOContent() {
         </ul>
       </section>
 
+      <section className="mb-10 rounded-lg border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-950">
+        <p className="font-semibold">Rates last checked: 14 May 2026</p>
+        <p className="mt-1">
+          Tax rates, working holiday maker rates, Medicare guidance, study loan
+          rates and car kilometre rates were checked against public ATO pages.
+        </p>
+      </section>
+
       {/* FAQ */}
       <section className="mb-10">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+        <h2 className="text-xl font-semibold text-slate-950 mb-4">
           Frequently asked questions
         </h2>
         <div className="space-y-2">
           {faqs.map((faq, i) => (
             <div
               key={i}
-              className="border border-gray-200 rounded-lg overflow-hidden"
+              className="border border-slate-200 rounded-lg overflow-hidden"
             >
               <button
                 type="button"
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                className="w-full text-left px-4 py-3 flex justify-between items-center hover:bg-gray-50 transition-colors"
+                className="w-full text-left px-4 py-3 flex justify-between items-center hover:bg-slate-50 transition-colors"
                 aria-expanded={openFaq === i}
               >
-                <span className="text-sm font-medium text-gray-800">
+                <span className="text-sm font-medium text-slate-800">
                   {faq.question}
                 </span>
-                <span className="text-gray-400 ml-2 text-lg">
+                <span className="text-slate-400 ml-2 text-lg">
                   {openFaq === i ? "\u2212" : "+"}
                 </span>
               </button>
               {openFaq === i && (
-                <div className="px-4 pb-3 text-sm text-gray-600 border-t border-gray-100 pt-2">
+                <div className="px-4 pb-3 text-sm text-slate-600 border-t border-slate-100 pt-2">
                   {faq.answer}
                 </div>
               )}

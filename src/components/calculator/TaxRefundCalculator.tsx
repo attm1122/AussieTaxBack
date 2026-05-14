@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { useForm, FormProvider } from "react-hook-form";
+import { useForm, FormProvider, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { calculateResult } from "@/lib/tax/calculate-tax";
@@ -11,11 +11,23 @@ import QuickExpensesSection from "./QuickExpensesSection";
 import StudentLoanMedicareSection from "./StudentLoanMedicareSection";
 import ResultCard from "./ResultCard";
 import SaveCalculationActions from "./SaveCalculationActions";
+import AtoLodgementGuide from "./AtoLodgementGuide";
+import AssumptionsSourcesPanel from "./AssumptionsSourcesPanel";
+import AdSlot from "@/components/ads/AdSlot";
 
 const schema = z.object({
   financialYear: z.enum(["2024-25", "2025-26"]),
+  taxResidency: z.enum(["resident", "working-holiday-maker", "foreign-resident"]),
   incomeBeforeTax: z.coerce.number().min(0, "Income must be 0 or more"),
   taxPaid: z.coerce.number().min(0, "Tax must be 0 or more"),
+  reportableFringeBenefits: z.coerce.number().min(0).default(0),
+  reportableSuperContributions: z.coerce.number().min(0).default(0),
+  netInvestmentLoss: z.coerce.number().min(0).default(0),
+  exemptForeignEmploymentIncome: z.coerce.number().min(0).default(0),
+  hasSpouseOrDependants: z.boolean().default(false),
+  spouseIncome: z.coerce.number().min(0).default(0),
+  dependentChildren: z.coerce.number().min(0).max(20).default(0),
+  medicareExemptionDays: z.coerce.number().min(0).max(365).default(0),
   workerType: z.string().min(1, "Please select your work type"),
   knowsTotalExpenses: z.boolean().default(false),
   totalExpensesAmount: z.coerce.number().min(0).default(0),
@@ -44,9 +56,8 @@ const schema = z.object({
   donationsHaveReceipts: z.boolean().default(false),
   taxAgentCost: z.coerce.number().min(0).default(0),
   hasStudentLoan: z.boolean().default(false),
-  studentLoanRepayment: z.coerce.number().min(0).default(0),
   hasPrivateHospitalCover: z.boolean().default(false),
-  medicareExempt: z.enum(["yes", "no", "not-sure"]).optional(),
+  medicareExempt: z.enum(["yes", "no", "not-sure"]).default("not-sure"),
 });
 
 export type CalculatorFormData = z.infer<typeof schema>;
@@ -54,8 +65,17 @@ export type CalculatorFormData = z.infer<typeof schema>;
 function buildCalculatorInput(data: CalculatorFormData): CalculatorInput {
   return {
     financialYear: data.financialYear,
+    taxResidency: data.taxResidency,
     incomeBeforeTax: data.incomeBeforeTax,
     taxPaid: data.taxPaid,
+    reportableFringeBenefits: data.reportableFringeBenefits,
+    reportableSuperContributions: data.reportableSuperContributions,
+    netInvestmentLoss: data.netInvestmentLoss,
+    exemptForeignEmploymentIncome: data.exemptForeignEmploymentIncome,
+    hasSpouseOrDependants: data.hasSpouseOrDependants,
+    spouseIncome: data.spouseIncome,
+    dependentChildren: data.dependentChildren,
+    medicareExemptionDays: data.medicareExemptionDays,
     workerType: data.workerType as CalculatorInput["workerType"],
     knowsTotalExpenses: data.knowsTotalExpenses,
     totalExpensesAmount: data.totalExpensesAmount,
@@ -86,7 +106,6 @@ function buildCalculatorInput(data: CalculatorFormData): CalculatorInput {
       taxAgentCost: data.taxAgentCost,
     },
     hasStudentLoan: data.hasStudentLoan,
-    studentLoanRepayment: data.studentLoanRepayment,
     hasPrivateHospitalCover: data.hasPrivateHospitalCover,
     medicareExempt:
       data.medicareExempt === "yes"
@@ -102,8 +121,17 @@ export default function TaxRefundCalculator() {
     resolver: zodResolver(schema),
     defaultValues: {
       financialYear: "2025-26",
+      taxResidency: "resident",
       incomeBeforeTax: 0,
       taxPaid: 0,
+      reportableFringeBenefits: 0,
+      reportableSuperContributions: 0,
+      netInvestmentLoss: 0,
+      exemptForeignEmploymentIncome: 0,
+      hasSpouseOrDependants: false,
+      spouseIncome: 0,
+      dependentChildren: 0,
+      medicareExemptionDays: 0,
       workerType: "",
       knowsTotalExpenses: false,
       totalExpensesAmount: 0,
@@ -132,13 +160,15 @@ export default function TaxRefundCalculator() {
       donationsHaveReceipts: false,
       taxAgentCost: 0,
       hasStudentLoan: false,
-      studentLoanRepayment: 0,
       hasPrivateHospitalCover: false,
+      medicareExempt: "not-sure",
     },
     mode: "onChange",
   });
 
-  const watchedValues = methods.watch();
+  const watchedValues = useWatch({
+    control: methods.control,
+  }) as CalculatorFormData;
 
   const result: CalculationResult | null = useMemo(() => {
     if (
@@ -160,9 +190,15 @@ export default function TaxRefundCalculator() {
     <FormProvider {...methods}>
       <form
         onSubmit={(e) => e.preventDefault()}
-        className="space-y-2"
+        className="space-y-4"
         noValidate
       >
+        <div className="rounded-lg border border-emerald-200 bg-emerald-50/70 p-4 text-sm text-emerald-950">
+          <p className="font-semibold">Start with your myGov income statement.</p>
+          <p className="mt-1 text-emerald-900/80">
+            You only need a few numbers: income, tax already taken out, and any work costs you paid yourself.
+          </p>
+        </div>
         <IncomeSection />
         <QuickExpensesSection />
         <StudentLoanMedicareSection />
@@ -170,6 +206,9 @@ export default function TaxRefundCalculator() {
         {result && (
           <>
             <ResultCard result={result} />
+            <AdSlot placement="result" />
+            <AtoLodgementGuide result={result} />
+            <AssumptionsSourcesPanel />
             <SaveCalculationActions result={result} />
           </>
         )}

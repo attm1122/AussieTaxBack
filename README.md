@@ -2,7 +2,7 @@
 
 A simple, fast, and accessible tax refund calculator for Australian workers.
 
-**Live site:** [https://australian-tax-refund-calculator.vercel.app](https://australian-tax-refund-calculator.vercel.app)
+**Live site:** [https://aussietaxback.com](https://aussietaxback.com)
 
 ## Features
 
@@ -12,7 +12,8 @@ A simple, fast, and accessible tax refund calculator for Australian workers.
 - Plain English (no ATO jargon)
 - 8 guided work expense categories
 - Configurable tax rates by financial year
-- Copy, print, download, and email your estimate
+- Copy, print, and download your estimate
+- AdSense-ready ad positions and privacy disclosures
 - Mobile-first responsive design
 - Full keyboard accessibility
 - SEO-optimized with Schema.org structured data
@@ -48,6 +49,20 @@ npm run build
 ```
 
 Static files are exported to the `out/` directory.
+
+## High-Traffic Hosting
+
+The site is designed to handle traffic spikes cheaply:
+
+- Static export only. There are no API routes, databases, or server actions.
+- Calculator work runs in the visitor's browser.
+- Static pages and assets can be served from a CDN.
+- `vercel.json` adds long-lived cache headers for static assets and basic
+  security headers.
+
+For the lowest-maintenance setup, deploy to Vercel, Cloudflare Pages, Netlify,
+or another static CDN host. If traffic grows, the hosting layer scales the
+static files instead of your app needing a server.
 
 ### Run tests
 
@@ -128,20 +143,27 @@ const helpfulLinks = [
 ];
 ```
 
-## Configuring Email Sending
+## AdSense and Analytics
 
-The email API stub at `src/app/api/email-estimate/route.ts` is ready for integration with providers like Resend or SendGrid.
+The app is ready for a low-maintenance AdSense setup.
 
-To enable email:
+Enable Auto Ads in AdSense, then set these environment variables in your host:
 
-1. Set the `EMAIL_PROVIDER` environment variable
-2. Add your provider's API key
-3. Implement the send logic in the route handler
-
-```typescript
-const emailProvider = process.env.EMAIL_PROVIDER;
-// Add your provider integration here
+```bash
+NEXT_PUBLIC_ADSENSE_CLIENT=ca-pub-xxxxxxxxxxxxxxxx
+NEXT_PUBLIC_ADSENSE_SLOT_TOP=1234567890
+NEXT_PUBLIC_ADSENSE_SLOT_RESULT=1234567890
+NEXT_PUBLIC_ADSENSE_SLOT_CONTENT=1234567890
+NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE=1234567890
+NEXT_PUBLIC_ADSENSE_SLOT_FOOTER=1234567890
+NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
 ```
+
+If an ad value is missing, that ad position does not render. This keeps the
+site clean before AdSense approval.
+
+After AdSense approval, update `public/ads.txt` with the real publisher line
+from your AdSense account.
 
 ## Plain Language Guide
 

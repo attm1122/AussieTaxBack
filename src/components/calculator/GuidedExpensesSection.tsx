@@ -24,18 +24,18 @@ function DollarInput({
   const { register } = useCalcForm();
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
+      <label htmlFor={id} className="block text-sm font-medium text-slate-700 mb-1">
         {label}
       </label>
       <div className="relative">
-        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">$</span>
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">$</span>
         <input
           id={id}
           type="number"
           min="0"
           placeholder={placeholder}
           {...register(name, { valueAsNumber: true })}
-          className="w-full rounded-md border border-gray-300 pl-7 pr-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+          className="w-full rounded-md border border-slate-300 pl-7 pr-3 py-2 focus:border-emerald-500"
           aria-invalid={error ? "true" : "false"}
         />
       </div>
@@ -60,7 +60,7 @@ function PctInput({
   const { register } = useCalcForm();
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-1">
+      <label htmlFor={id} className="block text-sm font-medium text-slate-700 mb-1">
         {label}
       </label>
       <div className="relative">
@@ -71,10 +71,10 @@ function PctInput({
           max="100"
           placeholder="0"
           {...register(name, { valueAsNumber: true })}
-          className="w-full rounded-md border border-gray-300 px-3 py-2 pr-8 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+          className="w-full rounded-md border border-slate-300 px-3 py-2 pr-8 focus:border-emerald-500"
           aria-invalid={error ? "true" : "false"}
         />
-        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">%</span>
+        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">%</span>
       </div>
       {error && (
         <p className="text-red-600 text-sm mt-1" role="alert">{error.message}</p>
@@ -91,7 +91,7 @@ export default function GuidedExpensesSection() {
 
   return (
     <div className="mt-4">
-      <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+      <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wide mb-3">
         Work expense categories
       </h3>
 
@@ -114,7 +114,7 @@ export default function GuidedExpensesSection() {
         <DollarInput id="toolsAmount" label="How much did you spend?" name="toolsAmount" error={errors.toolsAmount} />
         <PctInput id="toolsWorkPercentage" label="What percentage was for work?" name="toolsWorkPercentage" error={errors.toolsWorkPercentage} />
         <DollarInput id="toolsEmployerPaid" label="How much did your employer pay you back?" name="toolsEmployerPaid" error={errors.toolsEmployerPaid} />
-        <p className="text-xs text-gray-500">Only include the work-use part. For example, if you use your phone 50% for work, only include 50% of the cost.</p>
+        <p className="text-xs text-slate-500">Only include the work-use part. For example, if you use your phone 50% for work, only include 50% of the cost.</p>
       </ExpenseCard>
 
       <ExpenseCard
@@ -126,7 +126,7 @@ export default function GuidedExpensesSection() {
         <PctInput id="phoneWorkPercentage" label="Phone work-use percentage" name="phoneWorkPercentage" error={errors.phoneWorkPercentage} />
         <DollarInput id="internetYearlyCost" label="Yearly internet cost" name="internetYearlyCost" error={errors.internetYearlyCost} />
         <PctInput id="internetWorkPercentage" label="Internet work-use percentage" name="internetWorkPercentage" error={errors.internetWorkPercentage} />
-        <p className="text-xs text-gray-500">Use your best estimate if you have records. Do not include private use.</p>
+        <p className="text-xs text-slate-500">Use your best estimate if you have records. Do not include private use.</p>
       </ExpenseCard>
 
       <ExpenseCard
@@ -153,7 +153,7 @@ export default function GuidedExpensesSection() {
           </p>
         )}
         <div>
-          <label htmlFor="carKilometres" className="block text-sm font-medium text-gray-700 mb-1">
+          <label htmlFor="carKilometres" className="block text-sm font-medium text-slate-700 mb-1">
             Car kilometres for work
           </label>
           <input
@@ -163,9 +163,9 @@ export default function GuidedExpensesSection() {
             max="5000"
             placeholder="0"
             {...register("carKilometres", { valueAsNumber: true })}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+            className="w-full rounded-md border border-slate-300 px-3 py-2 focus:border-emerald-500"
           />
-          <p className="text-xs text-gray-500 mt-1">Maximum 5,000 km can be claimed.</p>
+          <p className="text-xs text-slate-500 mt-1">Maximum 5,000 km can be claimed.</p>
         </div>
         <DollarInput id="otherTravelCosts" label="Other travel costs" name="otherTravelCosts" error={errors.otherTravelCosts} />
         <DollarInput id="accommodation" label="Accommodation" name="accommodation" error={errors.accommodation} />
@@ -194,9 +194,9 @@ export default function GuidedExpensesSection() {
             id="donationsHaveReceipts"
             type="checkbox"
             {...register("donationsHaveReceipts")}
-            className="rounded text-green-600 focus:ring-green-500"
+            className="rounded text-emerald-600 focus:ring-emerald-500"
           />
-          <label htmlFor="donationsHaveReceipts" className="text-sm text-gray-700">
+          <label htmlFor="donationsHaveReceipts" className="text-sm text-slate-700">
             Do you have records or receipts?
           </label>
         </div>

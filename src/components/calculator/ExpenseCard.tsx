@@ -16,11 +16,11 @@ export default function ExpenseCard({
   children,
 }: ExpenseCardProps) {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 md:p-5 mb-4 shadow-sm">
-      <h3 className="text-base font-semibold text-gray-900 mb-1">{title}</h3>
-      <p className="text-sm text-gray-600 mb-2">{description}</p>
+    <div className="mb-4 rounded-lg border border-slate-200 bg-slate-50/60 p-4 md:p-5">
+      <h3 className="text-base font-semibold text-slate-950 mb-1">{title}</h3>
+      <p className="text-sm text-slate-600 mb-2">{description}</p>
       {examples.length > 0 && (
-        <ul className="text-xs text-gray-500 mb-3 list-disc list-inside space-y-0.5">
+        <ul className="text-xs text-slate-500 mb-3 list-disc list-inside space-y-0.5">
           {examples.map((example, i) => (
             <li key={i}>{example}</li>
           ))}

@@ -15,15 +15,15 @@ export default function DisclaimerPage() {
         <div className="max-w-3xl mx-auto px-4 py-10">
           <Link
             href="/"
-            className="text-sm text-green-700 hover:underline mb-4 inline-block"
+            className="text-sm text-emerald-700 hover:underline mb-4 inline-block"
           >
             &larr; Back to calculator
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">Disclaimer</h1>
+          <h1 className="text-2xl font-bold text-slate-950 mb-6">Disclaimer</h1>
 
-          <div className="space-y-6 text-gray-700">
+          <div className="space-y-6 text-slate-700">
             <section>
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">
+              <h2 className="text-lg font-semibold text-slate-950 mb-2">
                 General estimates only
               </h2>
               <p>
@@ -34,7 +34,7 @@ export default function DisclaimerPage() {
             </section>
 
             <section>
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">
+              <h2 className="text-lg font-semibold text-slate-950 mb-2">
                 Not professional advice
               </h2>
               <p>
@@ -44,7 +44,7 @@ export default function DisclaimerPage() {
             </section>
 
             <section>
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">
+              <h2 className="text-lg font-semibold text-slate-950 mb-2">
                 Not affiliated with the ATO
               </h2>
               <p>
@@ -55,7 +55,7 @@ export default function DisclaimerPage() {
             </section>
 
             <section>
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">
+              <h2 className="text-lg font-semibold text-slate-950 mb-2">
                 Check official guidance
               </h2>
               <p>
@@ -65,14 +65,14 @@ export default function DisclaimerPage() {
             </section>
 
             <section>
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">
+              <h2 className="text-lg font-semibold text-slate-950 mb-2">
                 Personal circumstances vary
               </h2>
               <p>
                 Tax outcomes depend on your personal circumstances, including
-                your full income, deductions, offsets, private health cover,
-                student loans, and other factors that this simple calculator may
-                not capture.
+                your full income, work expenses, Medicare, private health cover,
+                study loans, and other details this simple calculator may not
+                capture.
               </p>
             </section>
           </div>

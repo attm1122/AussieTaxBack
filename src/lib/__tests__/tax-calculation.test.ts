@@ -3,6 +3,10 @@ import {
   calculateCategoryTotal,
   calculateWorkTravelTotal,
   calculateResult,
+  calculateMedicareLevy,
+  calculateMedicareSurcharge,
+  calculateLowIncomeTaxOffset,
+  calculateStudyLoanRepayment,
 } from "../tax/calculate-tax";
 import { taxYearsConfig } from "../tax/tax-config";
 import { CalculatorInput } from "../tax/types";
@@ -207,22 +211,23 @@ describe("calculateResult", () => {
 
   it("includes student loan repayment when applicable", () => {
     const input = createInput({
-      incomeBeforeTax: 60000,
+      incomeBeforeTax: 80000,
       hasStudentLoan: true,
-      studentLoanRepayment: 2000,
     });
     const result = calculateResult(input);
-    expect(result.studentLoanRepayment).toBe(2000);
+    expect(result.studentLoanRepayment).toBe(1950);
     expect(result.totalTaxPayable).toBe(
-      result.estimatedTax + result.medicareAmount + 2000
+      result.taxAfterOffsets +
+        result.medicareAmount +
+        result.medicareSurchargeAmount +
+        1950
     );
   });
 
   it("excludes student loan repayment when not applicable", () => {
     const input = createInput({
-      incomeBeforeTax: 60000,
+      incomeBeforeTax: 80000,
       hasStudentLoan: false,
-      studentLoanRepayment: 2000,
     });
     const result = calculateResult(input);
     expect(result.studentLoanRepayment).toBe(0);
@@ -296,6 +301,153 @@ describe("calculateResult", () => {
     });
     const result = calculateResult(input);
     expect(result.estimatedTax).toBe(5788);
+    expect(result.lowIncomeTaxOffset).toBe(250);
+    expect(result.taxAfterOffsets).toBe(5538);
+  });
+
+  it("uses working holiday maker tax rates", () => {
+    const input = createInput({
+      taxResidency: "working-holiday-maker",
+      incomeBeforeTax: 50000,
+      taxPaid: 0,
+    });
+    const result = calculateResult(input);
+    expect(result.estimatedTax).toBe(8250);
+    expect(result.lowIncomeTaxOffset).toBe(0);
+    expect(result.medicareAmount).toBe(0);
+  });
+
+  it("uses extra income items for study loan and Medicare surcharge income", () => {
+    const input = createInput({
+      incomeBeforeTax: 60000,
+      reportableSuperContributions: 10000,
+      hasStudentLoan: true,
+      hasPrivateHospitalCover: false,
+    });
+    const result = calculateResult(input);
+    expect(result.studyLoanRepaymentIncome).toBe(70000);
+    expect(result.studentLoanRepayment).toBe(450);
+    expect(result.medicareSurchargeIncome).toBe(70000);
+  });
+
+  it("reduces Medicare when the user enters part-year exemption days", () => {
+    const input = createInput({
+      incomeBeforeTax: 60000,
+      medicareExemptionDays: 182,
+    });
+    const result = calculateResult(input);
+    expect(result.medicareAmount).toBe(601.64);
+  });
+
+  it("uses family income when checking the Medicare low-income reduction", () => {
+    const input = createInput({
+      incomeBeforeTax: 40000,
+      hasSpouseOrDependants: true,
+      spouseIncome: 0,
+    });
+    const result = calculateResult(input);
+    expect(result.medicareAmount).toBe(0);
+  });
+
+  it("shows lower confidence when several estimate-sensitive items are entered", () => {
+    const input = createInput({
+      incomeBeforeTax: 90000,
+      workerType: "contractor",
+      knowsTotalExpenses: true,
+      totalExpensesAmount: 3000,
+      hasSpouseOrDependants: true,
+      spouseIncome: 50000,
+      reportableSuperContributions: 2000,
+    });
+    const result = calculateResult(input);
+    expect(result.confidence.level).toBe("lower");
+    expect(result.confidence.reasons.length).toBeGreaterThan(2);
+  });
+});
+
+describe("calculateMedicareLevy", () => {
+  const config = taxYearsConfig["2025-26"];
+
+  it("applies low-income Medicare reduction for resident singles", () => {
+    expect(calculateMedicareLevy(27222, config, "resident", false)).toBe(0);
+    expect(calculateMedicareLevy(30000, config, "resident", false)).toBe(277.8);
+  });
+
+  it("does not apply Medicare levy to non-residents", () => {
+    expect(
+      calculateMedicareLevy(60000, config, "working-holiday-maker", false)
+    ).toBe(0);
+  });
+});
+
+describe("calculateMedicareSurcharge", () => {
+  const config = taxYearsConfig["2025-26"];
+
+  it("uses family thresholds and charges the user share only", () => {
+    expect(
+      calculateMedicareSurcharge(
+        120000,
+        config,
+        "resident",
+        false,
+        true,
+        0,
+        210000
+      )
+    ).toBe(1200);
+  });
+
+  it("does not charge the surcharge when private hospital cover is entered", () => {
+    expect(
+      calculateMedicareSurcharge(180000, config, "resident", true)
+    ).toBe(0);
+  });
+});
+
+describe("calculateLowIncomeTaxOffset", () => {
+  const config = taxYearsConfig["2025-26"];
+
+  it("returns the full resident offset up to $37,500", () => {
+    expect(calculateLowIncomeTaxOffset(30000, 1888, config, "resident")).toBe(
+      700
+    );
+  });
+
+  it("tapers the resident offset between $37,500 and $45,000", () => {
+    expect(calculateLowIncomeTaxOffset(40000, 3488, config, "resident")).toBe(
+      575
+    );
+  });
+
+  it("tapers the resident offset between $45,000 and $66,667", () => {
+    expect(calculateLowIncomeTaxOffset(50000, 5788, config, "resident")).toBe(
+      250
+    );
+  });
+
+  it("does not apply to working holiday makers", () => {
+    expect(
+      calculateLowIncomeTaxOffset(
+        40000,
+        6000,
+        config,
+        "working-holiday-maker"
+      )
+    ).toBe(0);
+  });
+});
+
+describe("calculateStudyLoanRepayment", () => {
+  it("uses 2025-26 marginal HELP/STSL rates", () => {
+    expect(calculateStudyLoanRepayment(80000, taxYearsConfig["2025-26"])).toBe(
+      1950
+    );
+  });
+
+  it("uses 2024-25 total-income HELP/STSL rates", () => {
+    expect(calculateStudyLoanRepayment(99736, taxYearsConfig["2024-25"])).toBe(
+      5485.48
+    );
   });
 });
 
@@ -338,14 +490,22 @@ function createInput(
 ): CalculatorInput {
   return {
     financialYear: "2025-26",
+    taxResidency: "resident",
     incomeBeforeTax: 0,
     taxPaid: 0,
+    reportableFringeBenefits: 0,
+    reportableSuperContributions: 0,
+    netInvestmentLoss: 0,
+    exemptForeignEmploymentIncome: 0,
+    hasSpouseOrDependants: false,
+    spouseIncome: 0,
+    dependentChildren: 0,
+    medicareExemptionDays: 0,
     workerType: "full-time",
     knowsTotalExpenses: true,
     totalExpensesAmount: 0,
     expenses: createExpenses({}),
     hasStudentLoan: false,
-    studentLoanRepayment: 0,
     hasPrivateHospitalCover: false,
     medicareExempt: null,
     ...overrides,

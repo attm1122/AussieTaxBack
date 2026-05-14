@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import ThirdPartyScripts from "@/components/ThirdPartyScripts";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Australian Tax Refund Calculator | Estimate Your Tax Return",
+  metadataBase: new URL("https://aussietaxback.com"),
+  title: "Aussie Tax Back | Australian Tax Refund Calculator",
   description:
-    "Estimate your Australian tax refund or tax payable in plain English. Simple tax calculator for employees, casual workers, FIFO workers and people with more than one job.",
+    "Estimate your Australian tax refund or tax payable in plain English. Simple tax calculator for working holiday makers, casual workers, FIFO workers and people with more than one job.",
   keywords: [
     "tax refund calculator",
     "Australian tax",
@@ -14,16 +16,20 @@ export const metadata: Metadata = {
     "work expenses",
   ],
   openGraph: {
-    title: "Australian Tax Refund Calculator",
-    description: "Estimate your tax refund in plain English",
+    title: "Aussie Tax Back",
+    description: "Estimate your Australian tax refund in plain English",
     type: "website",
     locale: "en_AU",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Australian Tax Refund Calculator",
-    description: "Estimate your tax refund in plain English",
+    title: "Aussie Tax Back",
+    description: "Estimate your Australian tax refund in plain English",
   },
+  icons: {
+    icon: "/favicon.svg",
+  },
+  manifest: "/site.webmanifest",
   alternates: {
     canonical: "/",
   },
@@ -41,7 +47,7 @@ export default function RootLayout({
   const schemaOrg = {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    name: "Australian Tax Refund Calculator",
+    name: "Aussie Tax Back",
     description:
       "Estimate your Australian tax refund or tax payable in plain English.",
     applicationCategory: "FinanceApplication",
@@ -66,7 +72,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrg) }}
         />
       </head>
-      <body className="bg-gray-50 text-gray-900 antialiased">{children}</body>
+      <body className="text-slate-950 antialiased">
+        {children}
+        <ThirdPartyScripts />
+      </body>
     </html>
   );
 }

@@ -23,13 +23,13 @@ export default function QuickExpensesSection() {
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 md:p-5 shadow-sm mb-4">
-      <h2 className="text-lg font-semibold text-gray-900 mb-4">
+    <div className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm md:p-5">
+      <h2 className="text-lg font-semibold text-slate-950 mb-4">
         Quick work expenses
       </h2>
 
       <div className="mb-4">
-        <p className="text-sm font-medium text-gray-700 mb-2">
+        <p className="text-sm font-medium text-slate-700 mb-2">
           Do you already know your total work expenses?
         </p>
         <div className="flex gap-4">
@@ -39,9 +39,9 @@ export default function QuickExpensesSection() {
               name="knowsTotalExpenses"
               checked={knowsTotal === true}
               onChange={() => handleKnowsTotalChange(true)}
-              className="text-green-600 focus:ring-green-500"
+              className="text-emerald-600 focus:ring-emerald-500"
             />
-            <span className="text-sm text-gray-700">Yes</span>
+            <span className="text-sm text-slate-700">Yes</span>
           </label>
           <label className="flex items-center gap-2 cursor-pointer">
             <input
@@ -49,9 +49,9 @@ export default function QuickExpensesSection() {
               name="knowsTotalExpenses"
               checked={knowsTotal === false}
               onChange={() => handleKnowsTotalChange(false)}
-              className="text-green-600 focus:ring-green-500"
+              className="text-emerald-600 focus:ring-emerald-500"
             />
-            <span className="text-sm text-gray-700">No</span>
+            <span className="text-sm text-slate-700">No</span>
           </label>
         </div>
       </div>
@@ -60,12 +60,12 @@ export default function QuickExpensesSection() {
         <div>
           <label
             htmlFor="totalExpensesAmount"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-slate-700 mb-1"
           >
             How much did you spend on work expenses?
           </label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-sm">
               $
             </span>
             <input
@@ -74,7 +74,7 @@ export default function QuickExpensesSection() {
               min="0"
               placeholder="0"
               {...register("totalExpensesAmount", { valueAsNumber: true })}
-              className="w-full rounded-md border border-gray-300 pl-7 pr-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              className="w-full rounded-md border border-slate-300 pl-7 pr-3 py-2 focus:border-emerald-500"
             />
           </div>
           {errors.totalExpensesAmount && (
@@ -89,7 +89,7 @@ export default function QuickExpensesSection() {
         <button
           type="button"
           onClick={() => setShowGuided(true)}
-          className="no-print w-full bg-gray-100 text-gray-800 font-medium py-2.5 px-4 rounded-md hover:bg-gray-200 transition-colors border border-gray-300"
+          className="no-print w-full rounded-md border border-emerald-200 bg-emerald-50 px-4 py-2.5 font-medium text-emerald-800 transition-colors hover:bg-emerald-100"
         >
           Help me find work expenses
         </button>

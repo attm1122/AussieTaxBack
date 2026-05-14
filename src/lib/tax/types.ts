@@ -8,6 +8,8 @@ export type WorkerType =
   | "apprentice-trainee"
   | "contractor";
 
+export type TaxResidency = "resident" | "working-holiday-maker" | "foreign-resident";
+
 export interface TaxBracket {
   min: number;
   max: number | null;
@@ -17,7 +19,34 @@ export interface TaxBracket {
 
 export interface TaxYearConfig {
   residentRates: TaxBracket[];
+  workingHolidayMakerRates: TaxBracket[];
+  foreignResidentRates: TaxBracket[];
   medicareRate: number;
+  medicareSingleLowerThreshold: number;
+  medicareSingleUpperThreshold: number;
+  medicareFamilyUpperThreshold: number;
+  medicareFamilyChildAddOn: number;
+  medicareSurchargeSingleThresholds: {
+    tier1: number;
+    tier2: number;
+    tier3: number;
+  };
+  medicareSurchargeFamilyThresholds: {
+    tier1: number;
+    tier2: number;
+    tier3: number;
+  };
+  medicareSurchargeFamilyChildAddOn: number;
+  studyLoanRates: TaxBracket[];
+  studyLoanUsesMarginalRates: boolean;
+  lowIncomeTaxOffset: {
+    maximumOffset: number;
+    fullOffsetThreshold: number;
+    firstTaperThreshold: number;
+    firstTaperRate: number;
+    secondTaperThreshold: number;
+    secondTaperRate: number;
+  };
 }
 
 export interface WorkExpenses {
@@ -49,14 +78,22 @@ export interface WorkExpenses {
 
 export interface CalculatorInput {
   financialYear: FinancialYear;
+  taxResidency: TaxResidency;
   incomeBeforeTax: number;
   taxPaid: number;
+  reportableFringeBenefits: number;
+  reportableSuperContributions: number;
+  netInvestmentLoss: number;
+  exemptForeignEmploymentIncome: number;
+  hasSpouseOrDependants: boolean;
+  spouseIncome: number;
+  dependentChildren: number;
+  medicareExemptionDays: number;
   workerType: WorkerType;
   knowsTotalExpenses: boolean;
   totalExpensesAmount: number;
   expenses: WorkExpenses;
   hasStudentLoan: boolean;
-  studentLoanRepayment: number;
   hasPrivateHospitalCover: boolean;
   medicareExempt: boolean | null;
 }
@@ -79,11 +116,18 @@ export interface TaxBreakdown {
 }
 
 export interface CalculationResult {
+  financialYear: FinancialYear;
+  taxResidency: TaxResidency;
   incomeBeforeTax: number;
   totalWorkExpenses: number;
   incomeAfterWorkExpenses: number;
   estimatedTax: number;
+  lowIncomeTaxOffset: number;
+  taxAfterOffsets: number;
   medicareAmount: number;
+  medicareSurchargeIncome: number;
+  medicareSurchargeAmount: number;
+  studyLoanRepaymentIncome: number;
   studentLoanRepayment: number;
   totalTaxPayable: number;
   taxAlreadyTaken: number;
@@ -91,4 +135,8 @@ export interface CalculationResult {
   isRefund: boolean;
   expenseBreakdown: ExpenseBreakdown;
   taxBreakdown: TaxBreakdown;
+  confidence: {
+    level: "high" | "medium" | "lower";
+    reasons: string[];
+  };
 }

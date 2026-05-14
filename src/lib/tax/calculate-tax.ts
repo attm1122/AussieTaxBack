@@ -2,7 +2,9 @@ import {
   CalculatorInput,
   CalculationResult,
   ExpenseBreakdown,
+  TaxBracket,
   TaxBreakdown,
+  TaxResidency,
   TaxYearConfig,
   WorkExpenses,
 } from "./types";
@@ -29,11 +31,18 @@ export function calculateTaxForIncome(
   income: number,
   config: TaxYearConfig
 ): { tax: number; breakdown: TaxBreakdown } {
+  return calculateTaxFromBrackets(income, config.residentRates);
+}
+
+export function calculateTaxFromBrackets(
+  income: number,
+  rates: TaxBracket[]
+): { tax: number; breakdown: TaxBreakdown } {
   const taxableIncome = Math.max(0, income);
-  let applicableBracket = config.residentRates[0];
+  let applicableBracket = rates[0];
 
   // Find the highest bracket that applies to this income
-  for (const bracket of config.residentRates) {
+  for (const bracket of rates) {
     if (taxableIncome > (bracket.max ?? taxableIncome)) {
       continue; // Income exceeds this bracket, keep looking
     }
@@ -57,7 +66,7 @@ export function calculateTaxForIncome(
   totalTax = Math.max(0, totalTax);
 
   // Build breakdown for all brackets
-  const brackets: TaxBreakdown["brackets"] = config.residentRates.map(
+  const brackets: TaxBreakdown["brackets"] = rates.map(
     (bracket) => {
       if (taxableIncome <= bracket.min) {
         return {
@@ -87,6 +96,205 @@ export function calculateTaxForIncome(
       brackets,
       totalProgressiveTax: totalTax,
     },
+  };
+}
+
+function getRatesForResidency(
+  config: TaxYearConfig,
+  taxResidency: TaxResidency
+): TaxBracket[] {
+  if (taxResidency === "working-holiday-maker") {
+    return config.workingHolidayMakerRates;
+  }
+  if (taxResidency === "foreign-resident") {
+    return config.foreignResidentRates;
+  }
+  return config.residentRates;
+}
+
+export function calculateMedicareLevy(
+  taxableIncome: number,
+  config: TaxYearConfig,
+  taxResidency: TaxResidency,
+  medicareExempt: boolean | null,
+  medicareExemptionDays: number = 0,
+  hasSpouseOrDependants: boolean = false,
+  familyTaxableIncome: number = taxableIncome,
+  dependentChildren: number = 0
+): number {
+  const exemptionDays = Math.max(0, Math.min(365, medicareExemptionDays));
+
+  if (
+    taxResidency !== "resident" ||
+    medicareExempt === true ||
+    exemptionDays >= 365
+  ) {
+    return 0;
+  }
+
+  let fullYearLevy: number;
+
+  if (hasSpouseOrDependants) {
+    const familyUpperThreshold =
+      config.medicareFamilyUpperThreshold +
+      Math.max(0, dependentChildren) * config.medicareFamilyChildAddOn;
+    const familyLowerThreshold = familyUpperThreshold * 0.8;
+
+    if (familyTaxableIncome <= familyLowerThreshold) {
+      fullYearLevy = 0;
+    } else if (familyTaxableIncome <= familyUpperThreshold) {
+      fullYearLevy = Math.min(
+        taxableIncome * config.medicareRate,
+        (familyTaxableIncome - familyLowerThreshold) * 0.1
+      );
+    } else {
+      fullYearLevy = taxableIncome * config.medicareRate;
+    }
+  } else if (taxableIncome <= config.medicareSingleLowerThreshold) {
+    fullYearLevy = 0;
+  } else if (taxableIncome <= config.medicareSingleUpperThreshold) {
+    fullYearLevy = (taxableIncome - config.medicareSingleLowerThreshold) * 0.1;
+  } else {
+    fullYearLevy = taxableIncome * config.medicareRate;
+  }
+
+  const taxableDaysRatio = (365 - exemptionDays) / 365;
+  return roundCents(fullYearLevy * taxableDaysRatio);
+}
+
+export function calculateMedicareSurcharge(
+  medicareSurchargeIncome: number,
+  config: TaxYearConfig,
+  taxResidency: TaxResidency,
+  hasPrivateHospitalCover: boolean,
+  hasSpouseOrDependants: boolean = false,
+  dependentChildren: number = 0,
+  familyMedicareSurchargeIncome: number = medicareSurchargeIncome
+): number {
+  if (taxResidency !== "resident" || hasPrivateHospitalCover) {
+    return 0;
+  }
+
+  const childAddOn =
+    hasSpouseOrDependants && dependentChildren > 1
+      ? (dependentChildren - 1) * config.medicareSurchargeFamilyChildAddOn
+      : 0;
+  const thresholds = hasSpouseOrDependants
+    ? {
+        tier1: config.medicareSurchargeFamilyThresholds.tier1 + childAddOn,
+        tier2: config.medicareSurchargeFamilyThresholds.tier2 + childAddOn,
+        tier3: config.medicareSurchargeFamilyThresholds.tier3 + childAddOn,
+      }
+    : config.medicareSurchargeSingleThresholds;
+  const testIncome = hasSpouseOrDependants
+    ? familyMedicareSurchargeIncome
+    : medicareSurchargeIncome;
+
+  if (testIncome > thresholds.tier3) {
+    return roundCents(medicareSurchargeIncome * 0.015);
+  }
+  if (testIncome > thresholds.tier2) {
+    return roundCents(medicareSurchargeIncome * 0.0125);
+  }
+  if (testIncome > thresholds.tier1) {
+    return roundCents(medicareSurchargeIncome * 0.01);
+  }
+  return 0;
+}
+
+export function calculateStudyLoanRepayment(
+  repaymentIncome: number,
+  config: TaxYearConfig
+): number {
+  const income = Math.max(0, repaymentIncome);
+
+  if (!config.studyLoanUsesMarginalRates) {
+    const bracket = config.studyLoanRates.find(
+      (rate) => income >= rate.min && income <= (rate.max ?? income)
+    );
+    return bracket ? roundCents(income * bracket.rate) : 0;
+  }
+
+  const bracket = config.studyLoanRates.find(
+    (rate) => income >= rate.min && income <= (rate.max ?? income)
+  );
+
+  if (!bracket || bracket.rate === 0) {
+    return 0;
+  }
+
+  if (bracket.min === 179286) {
+    return roundCents(income * bracket.rate);
+  }
+
+  const threshold = Math.max(0, bracket.min - 1);
+  return roundCents(bracket.base + (income - threshold) * bracket.rate);
+}
+
+export function calculateLowIncomeTaxOffset(
+  taxableIncome: number,
+  incomeTaxBeforeOffsets: number,
+  config: TaxYearConfig,
+  taxResidency: TaxResidency
+): number {
+  if (taxResidency !== "resident" || incomeTaxBeforeOffsets <= 0) {
+    return 0;
+  }
+
+  const lito = config.lowIncomeTaxOffset;
+  let offset = 0;
+
+  if (taxableIncome <= lito.fullOffsetThreshold) {
+    offset = lito.maximumOffset;
+  } else if (taxableIncome <= lito.firstTaperThreshold) {
+    offset =
+      lito.maximumOffset -
+      (taxableIncome - lito.fullOffsetThreshold) * lito.firstTaperRate;
+  } else if (taxableIncome <= lito.secondTaperThreshold) {
+    offset =
+      325 - (taxableIncome - lito.firstTaperThreshold) * lito.secondTaperRate;
+  }
+
+  return roundCents(Math.min(Math.max(0, offset), incomeTaxBeforeOffsets));
+}
+
+function getConfidence(input: CalculatorInput, totalWorkExpenses: number): CalculationResult["confidence"] {
+  const reasons: string[] = [];
+
+  if (input.taxResidency !== "resident") {
+    reasons.push("temporary visa or non-resident tax can depend on your exact situation");
+  }
+  if (input.medicareExemptionDays > 0 || input.medicareExempt === null) {
+    reasons.push("Medicare can change if you were exempt or only covered for part of the year");
+  }
+  if (input.hasSpouseOrDependants) {
+    reasons.push("spouse or children can change Medicare");
+  }
+  if (input.workerType === "contractor") {
+    reasons.push("contractor and ABN income may need extra tax rules");
+  }
+  if (totalWorkExpenses > 0) {
+    reasons.push("work expenses depend on records and ATO rules");
+  }
+  if (
+    input.reportableFringeBenefits > 0 ||
+    input.reportableSuperContributions > 0 ||
+    input.netInvestmentLoss > 0 ||
+    input.exemptForeignEmploymentIncome > 0
+  ) {
+    reasons.push("extra myGov income items can affect study loan and Medicare");
+  }
+
+  if (reasons.length === 0) {
+    return {
+      level: "high",
+      reasons: ["simple wage estimate with no extra Medicare or expense issues"],
+    };
+  }
+
+  return {
+    level: reasons.length <= 2 ? "medium" : "lower",
+    reasons,
   };
 }
 
@@ -224,19 +432,75 @@ export function calculateResult(input: CalculatorInput): CalculationResult {
   );
 
   const { tax: estimatedTax, breakdown: taxBreakdown } =
-    calculateTaxForIncome(incomeAfterWorkExpenses, config);
+    calculateTaxFromBrackets(
+      incomeAfterWorkExpenses,
+      getRatesForResidency(config, input.taxResidency)
+    );
 
-  const medicareAmount =
-    input.medicareExempt === true
-      ? 0
-      : roundCents(incomeAfterWorkExpenses * config.medicareRate);
+  const lowIncomeTaxOffset = calculateLowIncomeTaxOffset(
+    incomeAfterWorkExpenses,
+    estimatedTax,
+    config,
+    input.taxResidency
+  );
+
+  const taxAfterOffsets = roundCents(
+    Math.max(0, estimatedTax - lowIncomeTaxOffset)
+  );
+
+  const extraIncomeForTests = roundCents(
+    Math.max(0, input.reportableFringeBenefits) +
+      Math.max(0, input.reportableSuperContributions) +
+      Math.max(0, input.netInvestmentLoss) +
+      Math.max(0, input.exemptForeignEmploymentIncome)
+  );
+
+  const studyLoanRepaymentIncome = roundCents(
+    incomeAfterWorkExpenses + extraIncomeForTests
+  );
+
+  const medicareSurchargeIncome = roundCents(
+    incomeAfterWorkExpenses + extraIncomeForTests
+  );
+
+  const familyTaxableIncome = roundCents(
+    incomeAfterWorkExpenses + Math.max(0, input.spouseIncome)
+  );
+
+  const familyMedicareSurchargeIncome = roundCents(
+    medicareSurchargeIncome + Math.max(0, input.spouseIncome)
+  );
+
+  const medicareAmount = calculateMedicareLevy(
+    incomeAfterWorkExpenses,
+    config,
+    input.taxResidency,
+    input.medicareExempt,
+    input.medicareExemptionDays,
+    input.hasSpouseOrDependants,
+    familyTaxableIncome,
+    input.dependentChildren
+  );
 
   const studentLoanRepayment = input.hasStudentLoan
-    ? input.studentLoanRepayment
+    ? calculateStudyLoanRepayment(studyLoanRepaymentIncome, config)
     : 0;
 
+  const medicareSurchargeAmount = calculateMedicareSurcharge(
+    medicareSurchargeIncome,
+    config,
+    input.taxResidency,
+    input.hasPrivateHospitalCover,
+    input.hasSpouseOrDependants,
+    input.dependentChildren,
+    familyMedicareSurchargeIncome
+  );
+
   const totalTaxPayable = roundCents(
-    estimatedTax + medicareAmount + studentLoanRepayment
+    taxAfterOffsets +
+      medicareAmount +
+      medicareSurchargeAmount +
+      studentLoanRepayment
   );
 
   const estimatedRefundOrPayable = roundCents(
@@ -244,11 +508,18 @@ export function calculateResult(input: CalculatorInput): CalculationResult {
   );
 
   return {
+    financialYear: input.financialYear,
+    taxResidency: input.taxResidency,
     incomeBeforeTax: input.incomeBeforeTax,
     totalWorkExpenses,
     incomeAfterWorkExpenses,
     estimatedTax,
+    lowIncomeTaxOffset,
+    taxAfterOffsets,
     medicareAmount,
+    medicareSurchargeIncome,
+    medicareSurchargeAmount,
+    studyLoanRepaymentIncome,
     studentLoanRepayment,
     totalTaxPayable,
     taxAlreadyTaken: input.taxPaid,
@@ -256,5 +527,6 @@ export function calculateResult(input: CalculatorInput): CalculationResult {
     isRefund: estimatedRefundOrPayable > 0,
     expenseBreakdown,
     taxBreakdown,
+    confidence: getConfidence(input, totalWorkExpenses),
   };
 }
