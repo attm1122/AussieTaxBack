@@ -1,103 +1,52 @@
 import Link from "next/link";
-import { calculateResult } from "@/lib/tax/calculate-tax";
-import type { CalculatorInput } from "@/lib/tax/types";
-import { formatCurrency } from "@/lib/tax/format";
 
-const baseInput: CalculatorInput = {
-  financialYear: "2025-26",
-  taxResidency: "resident",
-  incomeBeforeTax: 0,
-  taxPaid: 0,
-  reportableFringeBenefits: 0,
-  reportableSuperContributions: 0,
-  netInvestmentLoss: 0,
-  exemptForeignEmploymentIncome: 0,
-  hasSpouseOrDependants: false,
-  spouseIncome: 0,
-  dependentChildren: 0,
-  medicareExemptionDays: 0,
-  workerType: "casual",
-  knowsTotalExpenses: true,
-  totalExpensesAmount: 0,
-  expenses: {
-    workClothesAmount: 0,
-    workClothesEmployerPaid: 0,
-    laundryDryCleaningAmount: 0,
-    toolsAmount: 0,
-    toolsWorkPercentage: 100,
-    toolsEmployerPaid: 0,
-    phoneYearlyCost: 0,
-    phoneWorkPercentage: 0,
-    internetYearlyCost: 0,
-    internetWorkPercentage: 0,
-    trainingCost: 0,
-    trainingBooksMaterials: 0,
-    trainingTravel: 0,
-    trainingEmployerPaid: 0,
-    carKilometres: 0,
-    otherTravelCosts: 0,
-    accommodation: 0,
-    mealsWhileAway: 0,
-    travelEmployerPaid: 0,
-    subscriptionsAmount: 0,
-    subscriptionsWorkPercentage: 100,
-    donationsAmount: 0,
-    donationsHaveReceipts: false,
-    taxAgentCost: 0,
-  },
-  hasStudentLoan: false,
-  hasPrivateHospitalCover: false,
-  medicareExempt: null,
-};
-
-const examples = [
+const situations = [
   {
-    title: "Working holiday maker",
-    note: "Earned $45,000, tax taken out $6,750, no work expenses.",
-    input: {
-      ...baseInput,
-      taxResidency: "working-holiday-maker",
-      incomeBeforeTax: 45000,
-      taxPaid: 6750,
-      workerType: "casual",
-    },
+    title: "Working holiday visa",
+    story:
+      "You worked farm, hospo, cleaning or warehouse jobs while travelling around Australia.",
+    check: "Choose working holiday maker visa and add the total income from all jobs.",
+    note: "Your tax usually starts from the first dollar, so your refund may be smaller than a resident worker's.",
   },
   {
-    title: "Casual worker",
-    note: "Earned $50,000, tax taken out $9,000, no work expenses.",
-    input: {
-      ...baseInput,
-      incomeBeforeTax: 50000,
-      taxPaid: 9000,
-      workerType: "casual",
-      medicareExempt: false,
-    },
+    title: "Casual job, too much tax taken",
+    story:
+      "You had one casual job and your payslips show a lot of tax taken out each week.",
+    check: "Add your total income and the tax already taken out from your myGov income statement.",
+    note: "This is a common refund situation, especially if you only worked part of the year.",
   },
   {
-    title: "Farm worker with expenses",
-    note: "Earned $38,000, tax taken out $6,500, claimed $1,200 work costs.",
-    input: {
-      ...baseInput,
-      taxResidency: "working-holiday-maker",
-      incomeBeforeTax: 38000,
-      taxPaid: 6500,
-      workerType: "casual",
-      totalExpensesAmount: 1200,
-    },
+    title: "Two jobs at the same time",
+    story:
+      "You worked two jobs, or changed jobs, and are not sure if the tax-free threshold was used correctly.",
+    check: "Add income and tax from every employer, not just your main job.",
+    note: "You might get a refund, but you can also owe money if too little tax was taken out.",
   },
   {
-    title: "Employee with study loan",
-    note: "Earned $80,000, tax taken out $19,000, has a HELP or HECS debt.",
-    input: {
-      ...baseInput,
-      incomeBeforeTax: 80000,
-      taxPaid: 19000,
-      workerType: "full-time",
-      medicareExempt: false,
-      hasStudentLoan: true,
-    },
+    title: "No Medicare cover",
+    story:
+      "You were on a temporary visa and could not use Medicare for some or all of the year.",
+    check:
+      "Check if you need a Medicare Entitlement Statement, then add the number of days not covered.",
+    note: "This can lower the Medicare part of the estimate, but only if the ATO accepts the exemption.",
   },
-] satisfies Array<{ title: string; note: string; input: CalculatorInput }>;
+  {
+    title: "Real work costs",
+    story:
+      "You bought safety boots, tools, uniforms, licences, or used your phone for work.",
+    check:
+      "Add only costs you paid yourself, keep receipts, and remove anything your employer paid back.",
+    note: "Work costs can help, but they only reduce taxable income. They are not refunded dollar for dollar.",
+  },
+  {
+    title: "Study loan or HECS debt",
+    story:
+      "You have a HELP, HECS or study loan and your income is above the repayment level.",
+    check:
+      "Turn on the study loan option and include any extra income items shown in myGov.",
+    note: "Study loan repayments can reduce your refund or turn a refund into an amount to pay.",
+  },
+];
 
 export default function ExampleCalculations() {
   return (
@@ -105,49 +54,40 @@ export default function ExampleCalculations() {
       <div className="mx-auto max-w-6xl px-4">
         <div className="max-w-3xl">
           <p className="text-sm font-semibold text-emerald-700">
-            Example calculations
+            Common situations
           </p>
           <h2 className="mt-2 text-2xl font-bold text-slate-950">
-            See how different tax situations can change the result
+            Which one sounds like you?
           </h2>
           <p className="mt-3 text-slate-600">
-            These are simple examples only. Use your own myGov income statement
-            for your real estimate.
+            Use these examples to choose the right options in the calculator and
+            know what to check in myGov.
           </p>
         </div>
-        <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {examples.map((example) => {
-            const result = calculateResult(example.input);
-            return (
-              <article
-                key={example.title}
-                className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm"
-              >
-                <h3 className="font-semibold text-slate-950">
-                  {example.title}
-                </h3>
-                <p className="mt-2 min-h-16 text-sm leading-6 text-slate-600">
-                  {example.note}
+        <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {situations.map((situation) => (
+            <article
+              key={situation.title}
+              className="rounded-lg border border-slate-200 bg-white p-4 shadow-sm"
+            >
+              <h3 className="font-semibold text-slate-950">
+                {situation.title}
+              </h3>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                {situation.story}
+              </p>
+              <div className="mt-4 space-y-3 border-t border-slate-100 pt-3 text-sm">
+                <p>
+                  <span className="font-medium text-slate-950">Check: </span>
+                  <span className="text-slate-600">{situation.check}</span>
                 </p>
-                <dl className="mt-4 space-y-2 border-t border-slate-100 pt-3 text-sm">
-                  <div className="flex justify-between gap-3">
-                    <dt className="text-slate-600">
-                      {result.isRefund ? "Refund estimate" : "Amount to pay"}
-                    </dt>
-                    <dd className="font-semibold text-emerald-700">
-                      {formatCurrency(Math.abs(result.estimatedRefundOrPayable))}
-                    </dd>
-                  </div>
-                  <div className="flex justify-between gap-3">
-                    <dt className="text-slate-600">Total tax estimate</dt>
-                    <dd className="font-medium text-slate-950">
-                      {formatCurrency(result.totalTaxPayable)}
-                    </dd>
-                  </div>
-                </dl>
-              </article>
-            );
-          })}
+                <p>
+                  <span className="font-medium text-slate-950">Why it matters: </span>
+                  <span className="text-slate-600">{situation.note}</span>
+                </p>
+              </div>
+            </article>
+          ))}
         </div>
         <Link
           href="/#calculator"
