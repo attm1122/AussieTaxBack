@@ -5,12 +5,15 @@ import { useEffect } from "react";
 type AdPlacement = "top" | "result" | "content" | "article" | "footer";
 
 const adSlots: Record<AdPlacement, string | undefined> = {
-  top: process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOP,
-  result: process.env.NEXT_PUBLIC_ADSENSE_SLOT_RESULT,
-  content: process.env.NEXT_PUBLIC_ADSENSE_SLOT_CONTENT,
-  article: process.env.NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE,
-  footer: process.env.NEXT_PUBLIC_ADSENSE_SLOT_FOOTER,
+  top: process.env.NEXT_PUBLIC_ADSENSE_SLOT_TOP || "1417115917",
+  result: process.env.NEXT_PUBLIC_ADSENSE_SLOT_RESULT || "5746024577",
+  content: process.env.NEXT_PUBLIC_ADSENSE_SLOT_CONTENT || "6867534556",
+  article: process.env.NEXT_PUBLIC_ADSENSE_SLOT_ARTICLE || "4411550150",
+  footer: process.env.NEXT_PUBLIC_ADSENSE_SLOT_FOOTER || "3896544831",
 };
+
+const adsenseClient =
+  process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "ca-pub-1045059001611132";
 
 declare global {
   interface Window {
@@ -24,7 +27,7 @@ interface AdSlotProps {
 }
 
 export default function AdSlot({ placement, className = "" }: AdSlotProps) {
-  const client = process.env.NEXT_PUBLIC_ADSENSE_CLIENT;
+  const client = adsenseClient;
   const slot = adSlots[placement];
 
   useEffect(() => {
